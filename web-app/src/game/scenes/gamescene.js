@@ -124,6 +124,17 @@ export default class GameScene extends Phaser.Scene {
           this.tail,
         );
 
+        // Check if snake hit the body
+        const hitBody = Phaser.Actions.GetFirst(
+          this.body.getChildren(),
+          { x: this.head.x, y: this.head.y }, 1,
+        );
+        if (hitBody) {
+          this.alive = false;
+
+          return false;
+        }
+
         // Update the timer ready for the next movement
         this.moveTime = time + this.speed;
 
@@ -140,9 +151,23 @@ export default class GameScene extends Phaser.Scene {
         if (this.head.x === food.x && this.head.y === food.y) {
           this.grow();
           food.eat();
+
+          if (this.speed > 20 && food.total % 5 === 0) {
+            this.speed -= 10;
+          }
           return true;
         }
         return false;
+      },
+
+      updateGrid(grid) {
+        const newGrid = grid;
+        this.body.children.each((segment) => {
+          const bx = segment.x / 16;
+          const by = segment.y / 16;
+          newGrid[by][bx] = false;
+        });
+        return newGrid;
       },
     });
 
@@ -170,7 +195,39 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.snake.update(time)) {
-      this.snake.collideWithFood(this.food);
+      if (this.snake.collideWithFood(this.food)) {
+        this.repositionFood();
+      }
     }
+  }
+
+  repositionFood() {
+    const testGrid = [];
+
+    for (let y = 0; y < 30; y += 1) {
+      testGrid[y] = [];
+      for (let x = 0; x < 40; x += 1) {
+        testGrid[y][x] = true;
+      }
+    }
+
+    this.snake.updateGrid(testGrid);
+
+    const validLocations = [];
+    for (let y = 0; y < 30; y += 1) {
+      for (let x = 0; x < 40; x += 1) {
+        if (testGrid[y][x] === true) {
+          validLocations.push({ x, y });
+        }
+      }
+    }
+
+    if (validLocations.length > 0) {
+      const pos = Phaser.Math.RND.pick(validLocations);
+      this.food.setPosition(pos.x * 16, pos.y * 16);
+
+      return true;
+    }
+    return false;
   }
 }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import GameScene from './scenes/gamescene';
+import ScoreScene from './scenes/scorescene';
 
 function runGame(containerId) {
   return new Phaser.Game({
@@ -7,6 +8,7 @@ function runGame(containerId) {
     parent: containerId,
     backgroundColor: '#aad751',
     scene: [
+      ScoreScene,
       GameScene,
     ],
     physics: {
@@ -14,8 +16,8 @@ function runGame(containerId) {
     },
     scale: {
       // mode: Phaser.Scale.FIT,
-      width: 640,
-      height: 480,
+      width: 644,
+      height: 484,
     },
   });
 }

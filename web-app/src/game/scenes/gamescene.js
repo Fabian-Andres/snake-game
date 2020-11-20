@@ -13,6 +13,7 @@ export default class GameScene extends Phaser.Scene {
   constructor() {
     super({
       key: 'GameScene',
+      active: true,
     });
   }
 
@@ -196,6 +197,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.snake.update(time)) {
       if (this.snake.collideWithFood(this.food)) {
+        this.addScore(this.food.total);
         this.repositionFood();
       }
     }
@@ -229,5 +231,9 @@ export default class GameScene extends Phaser.Scene {
       return true;
     }
     return false;
+  }
+
+  addScore(score) {
+    this.registry.events.emit('Score', score);
   }
 }

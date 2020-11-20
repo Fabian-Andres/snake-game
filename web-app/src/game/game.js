@@ -15,7 +15,7 @@ function runGame(containerId) {
       default: 'arcade',
     },
     scale: {
-      // mode: Phaser.Scale.FIT,
+      mode: Phaser.Scale.FIT,
       width: 644,
       height: 484,
     },

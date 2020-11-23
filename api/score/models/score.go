@@ -17,16 +17,16 @@ var (
 type Score struct {
 	ScoreID      string     `json:"score_id"`
 	Nickname     string     `json:"nickname"`
-	TotalScore   string     `json:"total_score"`
+	TotalScore   int32      `json:"total_score"`
 	CreationDate *time.Time `json:"creation_date"`
 }
 
 // NewScore function to create a new score
-func NewScore(nickname, totalScore string) (*Score, error) {
+func NewScore(nickname string, totalScore int32) (*Score, error) {
 	switch {
 	case nickname == "":
 		return nil, ErrEmptyNickname
-	case totalScore == "":
+	case totalScore <= 0:
 		return nil, ErrEmptyTotalScore
 	}
 

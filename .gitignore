@@ -1,3 +1,8 @@
 .coverage/
 .idea/
+/api/shared
+/api/scripts
+/api/node1
 coverage.out
+go.mod
+go.sum

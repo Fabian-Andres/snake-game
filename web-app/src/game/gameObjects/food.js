@@ -6,8 +6,8 @@ export default new Phaser.Class({
   function Food(scene, x, y) {
     Phaser.GameObjects.Image.call(this, scene);
 
-    this.setTexture('food');
-    this.setDisplaySize(20, 20);
+    this.setTexture('appleRed');
+    this.setDisplaySize(16, 16);
     this.setPosition(x * 16, y * 16);
     this.setOrigin(0);
 

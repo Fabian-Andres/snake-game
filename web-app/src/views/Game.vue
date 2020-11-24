@@ -2,6 +2,7 @@
   <div
     :id="containerId"
     v-if="downloaded"
+    class="game"
   />
   <div
     class="placeholder"
@@ -32,3 +33,10 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+  .game {
+    background: #578a34;
+    padding: 20px;
+    display: inline-block;
+  }
+</style>

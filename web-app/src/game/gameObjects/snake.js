@@ -12,10 +12,10 @@ export default new Phaser.Class({
     this.headPosition = new Phaser.Geom.Point(x, y);
     this.body = scene.add.group();
     this.head = this.body.create(x * 16, y * 16, 'head');
-    this.head.setDisplaySize(20, 20);
+    this.head.setDisplaySize(16, 16);
     this.head.setOrigin(0);
     this.alive = true;
-    this.speed = 100;
+    this.speed = 180;
     this.moveTime = 0;
     this.tail = new Phaser.Geom.Point(x, y);
     this.heading = RIGHT;
@@ -101,7 +101,7 @@ export default new Phaser.Class({
 
   grow() {
     const newPart = this.body.create(this.tail.x, this.tail.y, 'body');
-    newPart.setDisplaySize(20, 20);
+    newPart.setDisplaySize(16, 16);
     newPart.setOrigin(0);
   },
 

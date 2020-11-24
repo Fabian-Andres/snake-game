@@ -4,16 +4,7 @@
     color="black"
     dark
   >
-    <div class="d-flex align-center">
-      <v-img
-        alt="Vuetify Logo"
-        class="shrink mr-2"
-        contain
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-        transition="scale-transition"
-        width="40"
-      />
-    </div>
+    <game-score/>
 
     <v-spacer></v-spacer>
 
@@ -34,7 +25,12 @@
 </template>
 
 <script>
+import GameScore from './components/GameScore.vue';
+
 export default {
   name: 'App',
+  components: {
+    GameScore,
+  },
 };
 </script>

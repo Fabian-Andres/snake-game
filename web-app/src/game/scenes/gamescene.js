@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import Snake from '@/game/gameObjects/snake';
 import Food from '@/game/gameObjects/food';
-import foodImg from '@/assets/game/food.svg';
+import appleRed from '@/assets/game/apple-red.svg';
+import applePoison from '@/assets/game/apple-poison.svg';
 import snakeHead from '@/assets/game/snake-head.svg';
-import snakeBody from '@/assets/game/snake.svg';
+import snakeBody from '@/assets/game/snake-body.svg';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -14,15 +15,17 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('food', foodImg);
+    this.load.image('appleRed', appleRed);
+    this.load.image('applePoison', applePoison);
     this.load.image('head', snakeHead);
     this.load.image('body', snakeBody);
   }
 
   create() {
+    this.add.grid(320, 240, 640, 480, 16, 16, 0xa2d148).setAltFillStyle(0xaad751).setOutlineStyle();
     this.food = new Food(this, 3, 4);
-    this.snake = new Snake(this, 8, 8);
-
+    this.snake = new Snake(this, 13, 13);
+    this.snake.grow();
     // Init keyboard controls
     this.cursors = this.input.keyboard.createCursorKeys();
   }

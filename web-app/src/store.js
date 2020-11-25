@@ -11,7 +11,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     scores: {},
-    score: 0,
+    user: {
+      nickname: '',
+      score: 0,
+    },
   },
   actions: {
     setScore(context, payload) {
@@ -30,7 +33,7 @@ export default new Vuex.Store({
     },
     async postScore(context, score) {
       try {
-        const data = JSON.stringify({ nickname: 'Edison', total_score: score });
+        const data = JSON.stringify({ nickname: 'Anonymous', total_score: score });
         const config = {
           method: 'post',
           url: 'http://localhost:3000/api/scores',
@@ -52,21 +55,25 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    SET_USER(state, payload) {
+      state.user.nickname = payload.nickname;
+      state.user.score = payload.score;
+    },
     SET_SCORE(state, score) {
-      state.score = score;
+      state.user.score = score;
     },
     SET_SCORE_LIST(state, scores) {
       state.scores = scores;
     },
   },
   getters: {
-    getScore: (state) => state.score,
+    getScore: (state) => state.user.score,
     getScoreList: (state) => state.scores,
     getLastScore: (state) => state.scores.slice(-1).pop(),
   },
   modules: {
     getScore(state) {
-      return state.score;
+      return state.user.score;
     },
     getScoreList(state) {
       return state.scores;

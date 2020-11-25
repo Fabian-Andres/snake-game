@@ -8,7 +8,7 @@
     class="placeholder"
     v-else
   >
-     <v-skeleton-loader
+    <v-skeleton-loader
       class="mx-auto"
       max-width="700"
       type="image"

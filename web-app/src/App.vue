@@ -4,7 +4,9 @@
     color="black"
     dark
   >
-    <game-score/>
+    <div class="d-flex align-center">
+      <h1 class="h2">Snake Game</h1>
+    </div>
 
     <v-spacer></v-spacer>
 
@@ -25,12 +27,8 @@
 </template>
 
 <script>
-import GameScore from './components/GameScore.vue';
 
 export default {
   name: 'App',
-  components: {
-    GameScore,
-  },
 };
 </script>

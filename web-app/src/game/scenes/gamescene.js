@@ -1,10 +1,13 @@
 import Phaser from 'phaser';
 import Snake from '@/game/gameObjects/snake';
 import Food from '@/game/gameObjects/food';
+import Barrier from '@/game/gameObjects/barrier';
 import appleRed from '@/assets/game/apple-red.svg';
 import applePoison from '@/assets/game/apple-poison.svg';
 import snakeHead from '@/assets/game/snake-head.svg';
 import snakeBody from '@/assets/game/snake-body.svg';
+import barrierBambu from '@/assets/game/barrier-bambu.svg';
+import store from '@/store';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -19,15 +22,33 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('applePoison', applePoison);
     this.load.image('head', snakeHead);
     this.load.image('body', snakeBody);
+    this.load.image('barrierBambu', barrierBambu);
   }
 
   create() {
     this.add.grid(320, 240, 640, 480, 16, 16, 0xa2d148).setAltFillStyle(0xaad751).setOutlineStyle();
-    this.food = new Food(this, 3, 4);
+    this.food = new Food(this, 20, 20);
     this.snake = new Snake(this, 13, 13);
     this.snake.grow();
+    this.snake.grow();
+    this.barrier = new Barrier(this, 5 * 16, 7 * 16, 'barrierBambu');
+
     // Init keyboard controls
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    // Init physics to collider snake and barrier
+    this.physics.add.collider(
+      this.barrier, this.snake.head,
+      this.gameOver,
+      null, this,
+    );
+
+    this.registry.events.on('SetScore', (score) => {
+      store.dispatch('setScore', score);
+    });
+    this.registry.events.on('SaveScore', (score) => {
+      store.dispatch('postScore', score);
+    });
   }
 
   update(time) {
@@ -48,7 +69,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.snake.update(time)) {
       if (this.snake.collideWithFood(this.food)) {
-        this.addScore(this.food.total);
+        this.setScore();
         this.repositionFood();
       }
     }
@@ -84,7 +105,20 @@ export default class GameScene extends Phaser.Scene {
     return false;
   }
 
-  addScore(score) {
-    this.registry.events.emit('Score', score);
+  setScore() {
+    this.registry.events.emit('SetScore', this.food.total);
+  }
+
+  saveScore() {
+    const lastPosition = store.getters.getLastScore.total_score;
+    if (this.food.total >= lastPosition) {
+      this.registry.events.emit('SaveScore', this.food.total);
+    }
+  }
+
+  gameOver() {
+    this.snake.die();
+    this.scene.pause(this);
+    this.saveScore();
   }
 }

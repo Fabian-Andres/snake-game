@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+// import store from '@/store';
 
 // Keys controls
 const UP = 0;
@@ -6,52 +7,56 @@ const DOWN = 1;
 const LEFT = 2;
 const RIGHT = 3;
 
-export default new Phaser.Class({
-  initialize:
-  function Snake(scene, x, y) {
+export default class Snake extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y, type) {
+    super(scene, x, y, type);
     this.headPosition = new Phaser.Geom.Point(x, y);
     this.body = scene.add.group();
     this.head = this.body.create(x * 16, y * 16, 'head');
     this.head.setDisplaySize(16, 16);
     this.head.setOrigin(0);
+    this.score = 0;
     this.alive = true;
     this.speed = 180;
     this.moveTime = 0;
     this.tail = new Phaser.Geom.Point(x, y);
     this.heading = RIGHT;
     this.direction = RIGHT;
-  },
+
+    scene.add.existing(this);
+    scene.physics.world.enable(this.head);
+  }
 
   update(time) {
     if (time >= this.moveTime) {
       return this.move(time);
     }
     return time;
-  },
+  }
 
   faceLeft() {
     if (this.direction === UP || this.direction === DOWN) {
       this.heading = LEFT;
     }
-  },
+  }
 
   faceRight() {
     if (this.direction === UP || this.direction === DOWN) {
       this.heading = RIGHT;
     }
-  },
+  }
 
   faceUp() {
     if (this.direction === LEFT || this.direction === RIGHT) {
       this.heading = UP;
     }
-  },
+  }
 
   faceDown() {
     if (this.direction === LEFT || this.direction === RIGHT) {
       this.heading = DOWN;
     }
-  },
+  }
 
   move(time) {
     // Update headPosition of snake
@@ -88,8 +93,7 @@ export default new Phaser.Class({
       { x: this.head.x, y: this.head.y }, 1,
     );
     if (hitBody) {
-      this.alive = false;
-
+      this.die();
       return false;
     }
 
@@ -97,18 +101,19 @@ export default new Phaser.Class({
     this.moveTime = time + this.speed;
 
     return true;
-  },
+  }
 
   grow() {
     const newPart = this.body.create(this.tail.x, this.tail.y, 'body');
     newPart.setDisplaySize(16, 16);
     newPart.setOrigin(0);
-  },
+  }
 
   collideWithFood(food) {
     if (this.head.x === food.x && this.head.y === food.y) {
       this.grow();
       food.eat();
+      this.score = food.total;
 
       if (this.speed > 20 && food.total % 5 === 0) {
         this.speed -= 10;
@@ -116,7 +121,7 @@ export default new Phaser.Class({
       return true;
     }
     return false;
-  },
+  }
 
   updateGrid(grid) {
     const newGrid = grid;
@@ -126,5 +131,9 @@ export default new Phaser.Class({
       newGrid[by][bx] = false;
     });
     return newGrid;
-  },
-});
+  }
+
+  die() {
+    this.alive = false;
+  }
+}

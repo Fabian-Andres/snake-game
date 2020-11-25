@@ -5,18 +5,13 @@
     >
       <v-col
         cols="12"
-        md="10"
-      >
-        <game-score/>
-      </v-col>
-    </v-row>
-    <v-row
-      justify="center"
-    >
-      <v-col
-        cols="12"
         md="3"
       >
+      <v-card>
+        <v-card-text class="text-black">
+          <h2>Your score {{ score }}</h2>
+        </v-card-text>
+      </v-card>
       <rating-score
         :score_list="scores"
       />
@@ -47,9 +42,10 @@ export default {
   }),
   created() {
     this.$store.dispatch('getScoreList');
+    this.$store.dispatch('setScore');
   },
   computed: {
-    ...mapState(['scores']),
+    ...mapState(['scores', 'score']),
   },
 };
 </script>

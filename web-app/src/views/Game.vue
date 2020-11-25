@@ -8,7 +8,11 @@
     class="placeholder"
     v-else
   >
-    Downloading...
+     <v-skeleton-loader
+      class="mx-auto"
+      max-width="700"
+      type="image"
+    ></v-skeleton-loader>
   </div>
 </template>
 <script>

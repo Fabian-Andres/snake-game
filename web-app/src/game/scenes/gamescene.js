@@ -31,7 +31,7 @@ export default class GameScene extends Phaser.Scene {
     this.snake = new Snake(this, 13, 13);
     this.snake.grow();
     this.snake.grow();
-    this.barrier = new Barrier(this, 5 * 16, 7 * 16, 'barrierBambu');
+    this.barrier = new Barrier(this, 30, 10, 'barrierBambu');
 
     // Init keyboard controls
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -39,20 +39,21 @@ export default class GameScene extends Phaser.Scene {
     // Init physics to collider snake and barrier
     this.physics.add.collider(
       this.barrier, this.snake.head,
-      this.gameOver,
+      this.collideWithBrrier,
       null, this,
     );
 
     this.registry.events.on('SetScore', (score) => {
       store.dispatch('setScore', score);
     });
-    this.registry.events.on('SaveScore', (score) => {
-      store.dispatch('postScore', score);
+    this.registry.events.on('SaveScore', () => {
+      store.dispatch('postScore');
     });
   }
 
   update(time) {
     if (!this.snake.alive) {
+      this.gameOver();
       return;
     }
 
@@ -73,6 +74,10 @@ export default class GameScene extends Phaser.Scene {
         this.repositionFood();
       }
     }
+  }
+
+  collideWithBrrier() {
+    this.snake.die();
   }
 
   repositionFood() {
@@ -112,12 +117,13 @@ export default class GameScene extends Phaser.Scene {
   saveScore() {
     const lastPosition = store.getters.getLastScore.total_score;
     if (this.food.total >= lastPosition) {
-      this.registry.events.emit('SaveScore', this.food.total);
+      this.registry.events.emit('SaveScore');
+    } else {
+      console.log('Try again');
     }
   }
 
   gameOver() {
-    this.snake.die();
     this.scene.pause(this);
     this.saveScore();
   }

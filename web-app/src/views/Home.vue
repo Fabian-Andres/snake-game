@@ -26,8 +26,6 @@
       />
       </v-col>
       <v-col
-        cols="12"
-        md="7"
       >
         <game/>
       </v-col>

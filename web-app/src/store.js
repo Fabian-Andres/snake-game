@@ -31,9 +31,12 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
-    async postScore(context, score) {
+    async postScore() {
       try {
-        const data = JSON.stringify({ nickname: 'Anonymous', total_score: score });
+        const data = JSON.stringify({
+          nickname: this.state.user.nickname,
+          total_score: this.state.user.score,
+        });
         const config = {
           method: 'post',
           url: 'http://localhost:3000/api/scores',
